@@ -15,14 +15,22 @@ FORECAST = (
 )
 
 MAX_CHARS = 140
+OUTPUT_PATH = "/output/entry.txt"
+
+
+def validate(line: str) -> str:
+    """The gate needs 1-140 UTF-8 characters, not only whitespace."""
+    if not 1 <= len(line) <= MAX_CHARS:
+        raise ValueError(f"forecast is {len(line)} chars, must be 1-{MAX_CHARS}")
+    if not line.strip():
+        raise ValueError("forecast must not be only whitespace")
+    return line
 
 
 def main() -> None:
-    line = FORECAST
-    assert 1 <= len(line) <= MAX_CHARS, f"forecast is {len(line)} chars"
-    assert line.strip(), "forecast must not be only whitespace"
-    os.makedirs("/output", exist_ok=True)
-    with open("/output/entry.txt", "w", encoding="utf-8", newline="\n") as f:
+    line = validate(FORECAST)
+    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
+    with open(OUTPUT_PATH, "w", encoding="utf-8", newline="\n") as f:
         f.write(line)
 
 
